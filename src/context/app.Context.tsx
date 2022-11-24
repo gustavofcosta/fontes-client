@@ -8,6 +8,8 @@ interface ChildrenProps {
 interface InitialContextInterface {
   handleRegister: () => Promise<void>;
   loading: boolean;
+  setUsername: any;
+  setPassword: any;
 }
 
 export const AppContext = createContext<InitialContextInterface>(
@@ -41,7 +43,9 @@ export const AppProvider = ({ children }: ChildrenProps) => {
   };
 
   return (
-    <AppContext.Provider value={{ handleRegister, loading }}>
+    <AppContext.Provider
+      value={{ handleRegister, loading, setUsername, setPassword }}
+    >
       {children}
     </AppContext.Provider>
   );

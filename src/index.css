@@ -6,3 +6,7 @@ body {
   background-color: rgb(243, 242, 242);
   overflow-x: hidden;
 }
+
+.error {
+  @apply bg-colorRedLight text-colorRedDark w-full p-1 text-xs text-center;
+}

@@ -1,8 +1,13 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Register from "./pages/Register";
+
 function App() {
   return (
-    <div className="h-screen w-screen">
-      <div className="bg-white max-w-md mx-auto my-2">dsadsadasd</div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

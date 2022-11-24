@@ -1,20 +1,24 @@
 import { AppleLogo, GoogleLogo } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../components/Loading";
 import { useGlobalContext } from "../context/app.Context";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Navigate } from "react-router-dom";
 
 interface IFormInput {
   username: string;
   password: string;
+  name: string;
 }
 
 function Register() {
-  const { loading, setPassword, setUsername } = useGlobalContext();
+  const { loading, setPassword, setUsername, setName, isLogin } =
+    useGlobalContext();
 
   const [create, setCreate] = useState(false);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    setName(data.name);
     setUsername(data.username);
     setPassword(data.password);
   };
@@ -24,6 +28,12 @@ function Register() {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
+
+  if (isLogin) {
+    setTimeout(() => {
+      return <Navigate to="/dashboard" replace />;
+    }, 3000);
+  }
 
   if (loading) {
     return <Loading />;
@@ -52,6 +62,33 @@ function Register() {
             className="w-[290px] space-y-3"
             onSubmit={handleSubmit(onSubmit)}
           >
+            {create && (
+              <>
+                <input
+                  className="w-full border border-gray-200 rounded-md px-2 py-2 text-center"
+                  placeholder="name"
+                  {...register("name", {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 20,
+                  })}
+                />
+                {errors?.name?.type === "required" && (
+                  <p className="error">Este campo é obrigatório</p>
+                )}
+                {errors.name?.type === "maxLength" && (
+                  <p className="error">
+                    name não pode ser maior que 20 caracteres
+                  </p>
+                )}
+                {errors.username?.type === "minLength" && (
+                  <p className="error">
+                    name não pode ser menor que 5 caracteres
+                  </p>
+                )}
+              </>
+            )}
+
             <input
               className="w-full border border-gray-200 rounded-md px-2 py-2 text-center"
               placeholder="username"
@@ -77,6 +114,7 @@ function Register() {
             <input
               className="w-full border border-gray-200 rounded-md px-2 py-2 text-center"
               placeholder="senha"
+              type="password"
               {...register("password", {
                 required: true,
                 minLength: 5,
@@ -128,6 +166,7 @@ function Register() {
             </button>
           ) : (
             <button
+              type="submit"
               className="text-xs md:text-base text-primary_500 hover:text-primary_400 transition-all duration-500 ease-in-out"
               onClick={() => setCreate(!create)}
             >

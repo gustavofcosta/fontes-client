@@ -14,3 +14,7 @@ body {
 .successes {
   @apply bg-colorGreenLight text-colorGreenDark w-full p-1 text-xs rounded-md text-center;
 }
+
+.input {
+  @apply bg-gray-100 border-2 border-gray-300 p-2 rounded-md;
+}

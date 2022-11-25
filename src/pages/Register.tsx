@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Loading from "../components/Loading";
 import { useGlobalContext } from "../context/app.Context";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface IFormInput {
   username: string;
@@ -12,16 +12,7 @@ interface IFormInput {
 }
 
 function Register() {
-  const { loading, setPassword, setUsername, setName, isLogin } =
-    useGlobalContext();
-
-  const [create, setCreate] = useState(false);
-
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    setName(data.name);
-    setUsername(data.username);
-    setPassword(data.password);
-  };
+  const navigate = useNavigate();
 
   const {
     register,
@@ -29,15 +20,35 @@ function Register() {
     formState: { errors },
   } = useForm<IFormInput>();
 
-  if (isLogin) {
-    setTimeout(() => {
-      return <Navigate to="/dashboard" replace />;
-    }, 3000);
-  }
+  const [create, setCreate] = useState(false);
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  if (loading) {
-    return <Loading />;
-  }
+  const { user, registerUser, successes, loading, loggerUser, errorLogin } =
+    useGlobalContext();
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    setName(data.name);
+    setUsername(data.username);
+    setPassword(data.password);
+  };
+
+  useEffect(() => {
+    if (name) {
+      registerUser(name, username, password);
+    }
+
+    if (username) {
+      loggerUser(username, password);
+    }
+
+    if (user) {
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3000);
+    }
+  }, [name, username, password, user, navigate]);
 
   return (
     <div className="h-screen w-screen md:mb-20">
@@ -47,6 +58,11 @@ function Register() {
           <p className="text-sm md:text-base mt-4 tracking-wider">
             Aqui começa seu futuro
           </p>
+          {successes && (
+            <p className="successes">{username} por favor Aguarde...</p>
+          )}
+
+          {errorLogin && <p className="error"> username ou senha invalido </p>}
           <button className="w-[290px] flex text-xs md:text-sm tracking-wider justify-center items-center gap-2 border-2 border-gray-200 text-gray-600 rounded-md px-10 py-2 mt-10 hover:bg-gray-100 transition-all duration-500 ease-in-out ">
             <GoogleLogo className="text-lg" />
             Continuar com Google
@@ -70,7 +86,7 @@ function Register() {
                   {...register("name", {
                     required: true,
                     minLength: 5,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
                 {errors?.name?.type === "required" && (
@@ -78,7 +94,7 @@ function Register() {
                 )}
                 {errors.name?.type === "maxLength" && (
                   <p className="error">
-                    name não pode ser maior que 20 caracteres
+                    name não pode ser maior que 50 caracteres
                   </p>
                 )}
                 {errors.username?.type === "minLength" && (
@@ -142,6 +158,7 @@ function Register() {
             {!create ? (
               <button
                 type="submit"
+                disabled={loading}
                 className="w-[290px] flex text-xs md:text-sm tracking-wider justify-center items-center bg-primary_500 rounded-md px-10 py-2 mt-2 hover:bg-primary_400 transition-all duration-500 ease-in-out text-white"
               >
                 Entrar
@@ -149,6 +166,7 @@ function Register() {
             ) : (
               <button
                 type="submit"
+                disabled={loading}
                 className="w-[290px] flex text-xs md:text-sm tracking-wider justify-center items-center bg-primary_500 rounded-md px-10 py-2 mt-2 hover:bg-primary_400 transition-all duration-500 ease-in-out text-white"
               >
                 Criar

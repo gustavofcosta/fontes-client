@@ -12,13 +12,19 @@ interface ChildrenProps {
 }
 
 interface InitialContextInterface {
-  handleRegister: () => Promise<void>;
+  registerUser: (
+    name: string,
+    username: string,
+    password: string
+  ) => Promise<void>;
+  loggerUser: (username: string, password: string) => Promise<void>;
   loading: boolean;
-  setName: any;
-  setUsername: any;
-  setPassword: any;
-  registerSuccesses: string;
-  isLogin: boolean;
+
+  successes: boolean;
+  error: boolean;
+  errorLogin: boolean;
+  user: boolean;
+  logoutUser: () => void;
 }
 
 export const AppContext = createContext<InitialContextInterface>(
@@ -28,11 +34,10 @@ export const AppContext = createContext<InitialContextInterface>(
 export const AppProvider = ({ children }: ChildrenProps) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [registerSuccesses, SetRegisterSuccesses] = useState("");
-  const [isLogin, setIsLogin] = useState(false);
+  const [successes, setSuccesses] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorLogin, setErrorLogin] = useState(false);
+  const [user, setUser] = useState(false);
 
   const addTokenToLocalStorage = () => {
     localStorage.setItem("token", token);
@@ -42,50 +47,77 @@ export const AppProvider = ({ children }: ChildrenProps) => {
     localStorage.removeItem("token");
   };
 
-  const handleRegister = async (e: any) => {
-    e.preventDefault();
+  const registerUser = async (
+    name: string,
+    username: string,
+    password: string
+  ) => {
     setLoading(true);
     try {
       await axios.post("/user", { name, username, password });
 
-      SetRegisterSuccesses("Registro Realizado com sucesso");
-      setIsLogin(true);
+      setSuccesses(true);
+      setUser(true);
       setLoading(false);
     } catch (error: any) {
+      setLoading(false);
+      setError(true);
+    }
+  };
+
+  const loggerUser = async (username: string, password: string) => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post("/login", { username, password });
+
+      console.log(data.username, data.password);
+
+      if (username !== data.username || password !== data.password) {
+        setErrorLogin(true);
+      }
+
+      setSuccesses(true);
+      setUser(true);
+      setLoading(false);
+    } catch (error: any) {
+      setErrorLogin(true);
       setLoading(false);
     }
   };
 
-  const handleLogin = async () => {
-    setLoading(true);
-    try {
-      setLoading(true);
-      await axios.post("/login", { username, password });
-
-      SetRegisterSuccesses("Registro Realizado com sucesso");
-      setIsLogin(true);
-      setLoading(false);
-    } catch (error: any) {
-      setLoading(false);
-    }
+  const logoutUser = () => {
+    setUser(false);
   };
 
   useEffect(() => {
-    if (name && username && password) {
-      handleRegister();
-    }
-  }, [username, password]);
+    setTimeout(() => {
+      setError(false);
+    }, 3000);
+  }, [error]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorLogin(false);
+    }, 3000);
+  }, [errorLogin]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSuccesses(false);
+    }, 3000);
+  }, [successes]);
 
   return (
     <AppContext.Provider
       value={{
-        handleRegister,
+        registerUser,
+        loggerUser,
         loading,
-        setUsername,
-        setPassword,
-        setName,
-        registerSuccesses,
-        isLogin,
+        successes,
+        error,
+        user,
+        errorLogin,
+        logoutUser,
       }}
     >
       {children}

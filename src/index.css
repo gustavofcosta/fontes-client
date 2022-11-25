@@ -8,5 +8,9 @@ body {
 }
 
 .error {
-  @apply bg-colorRedLight text-colorRedDark w-full p-1 text-xs text-center;
+  @apply bg-colorRedLight text-colorRedDark w-full p-1 text-xs text-center rounded-md;
+}
+
+.successes {
+  @apply bg-colorGreenLight text-colorGreenDark w-full p-1 text-xs rounded-md text-center;
 }

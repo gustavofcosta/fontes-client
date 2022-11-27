@@ -37,7 +37,7 @@ const MoreProject = () => {
         title: data.title,
         zip_code: Number(data.zip_code),
         cost: Number(data.cost),
-        done: data.done,
+        done: false,
         //deadline: data.deadline,
       });
       getAllProjects();
@@ -61,16 +61,26 @@ const MoreProject = () => {
       <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
         <input
           className="input"
-          {...register("title")}
           type="text"
           placeholder="Titulo"
+          {...register("title", {
+            required: true,
+          })}
         />
+        {errors?.title?.type === "required" && (
+          <p className="error">Este campo é obrigatório</p>
+        )}
         <input
-          className="input"
-          {...register("zip_code")}
           type="number"
           placeholder="Código postal"
+          className="input"
+          {...register("zip_code", {
+            required: true,
+          })}
         />
+        {errors?.zip_code?.type === "required" && (
+          <p className="error">Este campo é obrigatório</p>
+        )}
         <input
           className="input"
           {...register("cost")}
@@ -86,14 +96,7 @@ const MoreProject = () => {
             placeholder="data"
           />
     </label>*/}
-        <label>
-          <input
-            className="input  cursor-pointer"
-            {...register("done")}
-            type="checkbox"
-          />{" "}
-          Finalizado
-        </label>
+
         <input
           type="submit"
           value="Criar"

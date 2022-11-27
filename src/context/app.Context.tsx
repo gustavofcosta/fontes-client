@@ -49,23 +49,24 @@ export const AppProvider = ({ children }: ChildrenProps) => {
   const [successes, setSuccesses] = useState(false);
   const [error, setError] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
   const [modalNewProject, setModalNewProject] = useState(false);
   const [modalEditProject, setModalEditProject] = useState(false);
   const [allProjects, setAllProjects] = useState<ProjectProps[]>([]);
   const [idProject, setIdProject] = useState("");
 
-  const openModalNewProject = (id: string) => {
+  const openModalNewProject = () => {
     setModalNewProject(true);
-    setIdProject(id);
   };
 
   const closeModalNewProject = () => {
     setModalNewProject(false);
   };
 
-  const openModalEditProject = () => {
+  const openModalEditProject = (id: string) => {
     setModalEditProject(true);
+    setIdProject(id);
+    console.log(id);
   };
 
   const closeModalEditProject = () => {

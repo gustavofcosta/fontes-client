@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useGlobalContext } from "../context/app.Context";
 import axios from "../services/axios";
 import Loading from "./Loading";
+import { ProjectProps } from "./Projects";
 
 interface IFormInput {
   title: string;
@@ -19,6 +20,7 @@ const EditeProject = () => {
     getAllProjects,
     idProject,
     setModalEditProject,
+    allProjects,
   } = useGlobalContext();
 
   const {
@@ -31,23 +33,31 @@ const EditeProject = () => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setLoading(true);
-    //Preciso aprender a conveter datas
 
-    try {
-      // Preciso aprender a formatar data para conseguir enviar para o banco de dados
-      setLoading(true);
-      await axios.put(`project/${idProject}`, {
-        title: data.title,
-        zip_code: Number(data.zip_code),
-        cost: Number(data.cost),
-        done: data.done,
-        //deadline: data.deadline,
-      });
-      getAllProjects();
-      setModalEditProject(false);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
+    const project = allProjects.find(
+      (project: ProjectProps) => project.id === idProject
+    );
+
+    if (project) {
+      const { title, zip_code, cost, done } = project;
+      console.log(title, zip_code, cost, done);
+
+      try {
+        // Preciso aprender a formatar data para conseguir enviar para o banco de dados
+        setLoading(true);
+        await axios.put(`project/${idProject}`, {
+          title: data.title || title,
+          zip_code: Number(data.zip_code || zip_code),
+          cost: Number(data.cost) || cost,
+          done: data.done || done,
+          //deadline: data.deadline,
+        });
+        getAllProjects();
+        setModalEditProject(false);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
     }
   };
 
@@ -101,7 +111,7 @@ const EditeProject = () => {
         </label>
         <input
           type="submit"
-          value="Criar"
+          value="Editar"
           className="flex-1 text-base rounded-md bg-primary_500 text-white p-1 cursor-pointer transition-all duration-500 ease-in-out hover:bg-primary_100"
         />
       </form>

@@ -13,8 +13,12 @@ interface IFormInput {
 }
 
 const MoreProject = () => {
-  const { closeModalNewProject, modalNewProject, getAllProjects } =
-    useGlobalContext();
+  const {
+    closeModalNewProject,
+    modalNewProject,
+    getAllProjects,
+    setModalNewProject,
+  } = useGlobalContext();
 
   const {
     register,
@@ -27,16 +31,17 @@ const MoreProject = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setLoading(true);
     // Preciso aprender a formatar data para conseguir enviar para o banco de dados
-    console.log(data.title, data.zip_code, data.cost, data.done, data.deadline);
+    console.log(data.title, data.zip_code, data.cost, data.done);
     try {
       await axios.post("/project", {
         title: data.title,
         zip_code: Number(data.zip_code),
         cost: Number(data.cost),
         done: data.done,
-        deadline: data.deadline,
+        //deadline: data.deadline,
       });
       getAllProjects();
+      setModalNewProject(false);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -72,7 +77,7 @@ const MoreProject = () => {
           type="number"
           placeholder="Custo"
         />
-        <label>
+        {/*<label>
           Data para finalizar{" "}
           <input
             className="input"
@@ -80,7 +85,7 @@ const MoreProject = () => {
             type="date"
             placeholder="data"
           />
-        </label>
+    </label>*/}
         <label>
           <input
             className="input  cursor-pointer"

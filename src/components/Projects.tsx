@@ -9,7 +9,7 @@ export interface ProjectProps {
   title: string;
   zip_code: number;
   cost: number;
-  deadline: any;
+  // deadline: any;
   done: boolean;
 }
 

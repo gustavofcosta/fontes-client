@@ -35,6 +35,8 @@ interface InitialContextInterface {
   getAllProjects: () => void;
   allProjects: ProjectProps[];
   idProject: string;
+  setModalNewProject: any;
+  setModalEditProject: any;
 }
 
 export const AppContext = createContext<InitialContextInterface>(
@@ -174,6 +176,8 @@ export const AppProvider = ({ children }: ChildrenProps) => {
         closeModalEditProject,
         modalEditProject,
         idProject,
+        setModalNewProject,
+        setModalEditProject,
       }}
     >
       {children}

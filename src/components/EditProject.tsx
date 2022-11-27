@@ -9,12 +9,17 @@ interface IFormInput {
   zip_code: number;
   cost: number;
   done: boolean;
-  deadline: any;
+  //deadline: any;
 }
 
 const EditeProject = () => {
-  const { closeModalEditProject, modalEditProject, getAllProjects, idProject } =
-    useGlobalContext();
+  const {
+    closeModalEditProject,
+    modalEditProject,
+    getAllProjects,
+    idProject,
+    setModalEditProject,
+  } = useGlobalContext();
 
   const {
     register,
@@ -27,17 +32,19 @@ const EditeProject = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setLoading(true);
     //Preciso aprender a conveter datas
-    console.log(data.title, data.zip_code, data.cost, data.done, data.deadline);
+
     try {
       // Preciso aprender a formatar data para conseguir enviar para o banco de dados
+      setLoading(true);
       await axios.put(`project/${idProject}`, {
         title: data.title,
         zip_code: Number(data.zip_code),
         cost: Number(data.cost),
         done: data.done,
-        deadline: data.deadline,
+        //deadline: data.deadline,
       });
       getAllProjects();
+      setModalEditProject(false);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -73,6 +80,7 @@ const EditeProject = () => {
           type="number"
           placeholder="Custo"
         />
+        {/*
         <label>
           Data para finalizar{" "}
           <input
@@ -82,6 +90,7 @@ const EditeProject = () => {
             placeholder="data"
           />
         </label>
+    */}
         <label>
           <input
             className="input  cursor-pointer"

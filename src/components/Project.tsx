@@ -11,8 +11,8 @@ const Project = ({
   zip_code,
   cost,
   done,
-  deadline,
-}: ProjectProps) => {
+}: //deadline,
+ProjectProps) => {
   const { getAllProjects, openModalEditProject } = useGlobalContext();
 
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ const Project = ({
       <h1>{title}</h1>
       <p>Cep: {zip_code}</p>
       <p>R$ {cost}</p>
-      <p>{deadline}</p>
+      {/*<p>{deadline}</p>*/}
       <p>Finalizado: {done ? "sim" : "não"}</p>
       <div className="flex gap-1 md:gap-4">
         <Pen

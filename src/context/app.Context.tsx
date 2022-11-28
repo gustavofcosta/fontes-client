@@ -49,7 +49,7 @@ export const AppProvider = ({ children }: ChildrenProps) => {
   const [successes, setSuccesses] = useState(false);
   const [error, setError] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
   const [modalNewProject, setModalNewProject] = useState(false);
   const [modalEditProject, setModalEditProject] = useState(false);
   const [allProjects, setAllProjects] = useState<ProjectProps[]>([]);
